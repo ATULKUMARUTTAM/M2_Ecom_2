@@ -32,17 +32,17 @@ public class UserService {
 
     public void addUser(UserRequest userRequest)
     {
-
         User user = new User();
         updateUserFromRequest(user, userRequest);
-            userRepository.save(user);
+        userRepository.save(user);
     }
 
-    private void updateUserFromRequest(User user, UserRequest userRequest) {
-    user.setFname(userRequest.getFname());
-    user.setLname(userRequest.getLname());
-    user.setEmail(userRequest.getEmail());
-    user.setPhone(userRequest.getPhone());
+    private void updateUserFromRequest(User user, UserRequest userRequest)
+    {
+        user.setFname(userRequest.getFname());
+        user.setLname(userRequest.getLname());
+        user.setEmail(userRequest.getEmail());
+        user.setPhone(userRequest.getPhone());
     if(userRequest.getAddress()!=null)
     {
         Address address = new Address();

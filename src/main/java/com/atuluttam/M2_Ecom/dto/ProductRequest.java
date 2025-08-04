@@ -13,5 +13,4 @@ public class ProductRequest {
     private Integer stockQunatity;
     private String category;
     private String imageUrl;
-
 }

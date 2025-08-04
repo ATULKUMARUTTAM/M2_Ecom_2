@@ -56,15 +56,42 @@ public class ProductService {
                     Product saveProduct = productRepository.save(existingProduct);
                     return mapToProductResponse(saveProduct);
                 });
-
-
     }
+
+
+
+//    public Optional<ProductResponse> updateProduct(Long id, ProductRequest productRequest) {
+//        Product existingProduct = productRepository.findById(id).orElse(null);
+//        if (existingProduct == null) {
+//            return Optional.empty();
+//        }
+//        updateProductFromRequest(existingProduct, productRequest);
+//        Product savedProduct = productRepository.save(existingProduct);
+//        return Optional.of(mapToProductResponse(savedProduct));
+//    }
+
+
+
+
 
     public List<ProductResponse> getAllProducts() {
     return productRepository.findByActiveTrue().stream()
             .map(this::mapToProductResponse)
             .collect(Collectors.toList());
     }
+
+
+//    public List<ProductResponse> getAllProducts() {
+//        List<Product> products = productRepository.findByActiveTrue();
+//        List<ProductResponse> responses = new ArrayList<>();
+//        for (Product product : products) {
+//            responses.add(mapToProductResponse(product));
+//        }
+//        return responses;
+//    }
+
+
+
 
 //    public void deleteProduct(Long id) {
 //
@@ -98,4 +125,14 @@ public class ProductService {
                 .collect(Collectors.toList());
 
     }
+
+
+//    public List<ProductResponse> searchProduct(String keyword) {
+//        List<Product> products = productRepository.searchproduct(keyword);
+//        List<ProductResponse> responses = new ArrayList<>();
+//        for (Product product : products) {
+//            responses.add(mapToProductResponse(product));
+//        }
+//        return responses;
+//    }
 }

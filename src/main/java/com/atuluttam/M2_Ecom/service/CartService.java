@@ -60,7 +60,8 @@ public class CartService {
 
         Optional<Product> productOptional = productRepository.findById(productId);
         Optional<User> userOptional = userRepository.findById(Long.valueOf(userId));
-       if(productOptional.isPresent() && userOptional.isPresent()) {
+       if(productOptional.isPresent() && userOptional.isPresent())
+       {
            cartItemRepository.deleteByUserAndProduct(userOptional.get(), productOptional.get());
            return true;
        }
@@ -74,8 +75,35 @@ public class CartService {
                 .orElseGet(List::of);
     }
 
+
+//    public List<CartItem> getCart(String userId) {
+//        // Find user by ID
+//        Optional<User> userOptional = userRepository.findById(Long.valueOf(userId));
+//
+//        // If user is not found, return an empty list
+//        if (userOptional.isEmpty()) {
+//            return new ArrayList<>();
+//        }
+//
+//        // Get cart items for the user
+//        User user = userOptional.get();
+//        return cartItemRepository.findByUser(user);
+//    }
+
     public void clearCart(String userId) {
         userRepository.findById(Long.valueOf(userId)).ifPresent(
                 cartItemRepository::deleteByUser);
     }
+
+//
+//    public void clearCart(String userId) {
+//        // Find user by ID
+//        Optional<User> userOptional = userRepository.findById(Long.valueOf(userId));
+//
+//        // If user exists, delete their cart items
+//        if (userOptional.isPresent()) {
+//            User user = userOptional.get();
+//            cartItemRepository.deleteByUser(user);
+//        }
+//    }
 }
