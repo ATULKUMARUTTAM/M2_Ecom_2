@@ -1,5 +1,4 @@
 package com.atuluttam.M2_Ecom.dto;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -14,5 +13,4 @@ public class OrderItemDTO {
       private Integer quantity;
       private BigDecimal price;
       private BigDecimal subTotal;
-
 }

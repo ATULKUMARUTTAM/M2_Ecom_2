@@ -13,24 +13,26 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/products")
-public class ProductController {
-
-
+public class ProductController
+{
     private final ProductService productService;
-
     @PostMapping
     public ResponseEntity<ProductResponse> createProduct(@RequestBody ProductRequest productRequest)
     {
         return new ResponseEntity<ProductResponse>(productService.createProduct(productRequest), HttpStatus.CREATED);
-
     }
-
 
     @GetMapping
     public ResponseEntity<List<ProductResponse>> getProducts()
     {
         return  ResponseEntity.ok(productService.getAllProducts());
 
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ProductResponse> getOneProducts(@PathVariable String id)
+    {
+        return  ResponseEntity.ok(productService.getAProduct(id));
     }
 
 
@@ -40,7 +42,6 @@ public class ProductController {
         return productService.updateProduct(id, productRequest)
                 .map(ResponseEntity::ok)
                 .orElseGet(()->ResponseEntity.notFound().build());
-
     }
 
     @DeleteMapping("/{id}")

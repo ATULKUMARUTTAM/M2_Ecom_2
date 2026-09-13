@@ -22,38 +22,91 @@ public class CartService {
 
     private final ProductRepository productRepository;
     private final CartItemRepository cartItemRepository;
-
     private final UserRepository userRepository;
-    public boolean addToCart(String userId, CartItemRequest request)
-    {
+    public boolean addToCart(String userId, CartItemRequest request) {
+
+        // 1. Find product
         Optional<Product> productOptional = productRepository.findById(request.getProductId());
-    if(productOptional.isEmpty())
-        return false;
-    Product product = productOptional.get();
 
-    if(product.getStockQunatity() < request.getQuantity())
-        return false;
-    Optional<User> userOptional = userRepository.findById(Long.valueOf(userId));
-    if(userOptional.isEmpty())
-        return false;
+        if (productOptional.isEmpty()) {
+            return false;
+        }
 
-    User user = userOptional.get();
-    CartItem existingCartItem  = cartItemRepository.findByUserAndProduct(user, product);
-    if(existingCartItem !=null)
-    {
-        existingCartItem.setQuantity(existingCartItem.getQuantity() + request.getQuantity());
-        existingCartItem.setPrice(product.getPrice().multiply(BigDecimal.valueOf(existingCartItem.getQuantity())));
-        cartItemRepository.save(existingCartItem);
-    }
-    else {
+        Product product = productOptional.get();
+
+        // 2. Check whether product is active
+        if (!product.getActive()) {
+            return false;
+        }
+
+        // 3. Check requested quantity
+        if (request.getQuantity() == null || request.getQuantity() <= 0) {
+            return false;
+        }
+
+        // 4. Find user
+        Optional<User> userOptional =
+                userRepository.findById(Long.valueOf(userId));
+
+        if (userOptional.isEmpty()) {
+            return false;
+        }
+
+        User user = userOptional.get();
+
+        // 5. Check whether product already exists in user's cart
+        CartItem existingCartItem =
+                cartItemRepository.findByUserAndProduct(user, product);
+
+        // 6. Calculate new total quantity
+        int newQuantity = request.getQuantity();
+
+        if (existingCartItem != null) {
+            newQuantity =
+                    existingCartItem.getQuantity()
+                            + request.getQuantity();
+        }
+
+        // 7. Check stock
+        if (newQuantity > product.getStockQunatity()) {
+            return false;
+        }
+
+        // 8. If product already exists in cart
+        if (existingCartItem != null) {
+
+            existingCartItem.setQuantity(newQuantity);
+
+            // Store total price of all items
+            existingCartItem.setPrice(
+                    product.getPrice()
+                            .multiply(BigDecimal.valueOf(newQuantity))
+            );
+
+            cartItemRepository.save(existingCartItem);
+        }
+
+        // 9. Otherwise create new cart item
+        else {
+
             CartItem cartItem = new CartItem();
+
             cartItem.setUser(user);
             cartItem.setProduct(product);
             cartItem.setQuantity(request.getQuantity());
-            cartItem.setPrice(product.getPrice().multiply(BigDecimal.valueOf(request.getQuantity())));
+
+            // Total price = product price × quantity
+            cartItem.setPrice(
+                    product.getPrice()
+                            .multiply(
+                                    BigDecimal.valueOf(request.getQuantity())
+                            )
+            );
+
             cartItemRepository.save(cartItem);
-    }
-    return true;
+        }
+
+        return true;
     }
 
     public boolean deleteItemfromCart(String userId, Long productId) {

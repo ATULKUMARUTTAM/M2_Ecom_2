@@ -17,7 +17,8 @@ public class ProductService {
 
     private final ProductRepository productRepository;
 
-    public ProductResponse createProduct(ProductRequest productRequest) {
+    public ProductResponse createProduct(ProductRequest productRequest)
+    {
         Product product = new Product();
         updateProductFromRequest(product, productRequest);
         Product savedProduct = productRepository.save(product);
@@ -34,7 +35,6 @@ public class ProductService {
         productResponse.setDescription(savedProduct.getDescription());
         productResponse.setImageUrl(savedProduct.getImageUrl());
         productResponse.setStockQunatity(savedProduct.getStockQunatity());
-
         return productResponse;
     }
 
@@ -81,6 +81,8 @@ public class ProductService {
     }
 
 
+
+
 //    public List<ProductResponse> getAllProducts() {
 //        List<Product> products = productRepository.findByActiveTrue();
 //        List<ProductResponse> responses = new ArrayList<>();
@@ -106,10 +108,11 @@ public class ProductService {
 //    }
 
 
-    public boolean deleteProduct(Long id) {
+    public boolean deleteProduct(Long id)
+    {
         Optional<Product> optionalProduct = productRepository.findById(id);
-
-        if (optionalProduct.isPresent()) {
+        if (optionalProduct.isPresent())
+        {
             Product product = optionalProduct.get();
             product.setActive(false);
             productRepository.save(product);
@@ -117,13 +120,22 @@ public class ProductService {
         }
         return false;
         }
-
-
     public List<ProductResponse> searchProduct(String keyword) {
         return productRepository.searchproduct(keyword).stream()
                 .map(this::mapToProductResponse)
                 .collect(Collectors.toList());
 
+    }
+
+    public ProductResponse getAProduct(String id)
+    {
+        Optional<Product> p = productRepository.findById(Long.valueOf(id));
+        if (p.isPresent())
+        {
+            return mapToProductResponse(p.get());
+        }
+        else
+            return null;
     }
 
 
