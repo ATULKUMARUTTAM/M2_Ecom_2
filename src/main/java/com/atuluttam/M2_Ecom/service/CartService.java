@@ -23,7 +23,8 @@ public class CartService {
     private final ProductRepository productRepository;
     private final CartItemRepository cartItemRepository;
     private final UserRepository userRepository;
-    public boolean addToCart(String userId, CartItemRequest request) {
+    public boolean addToCart(String userId, CartItemRequest request)
+    {
 
         // 1. Find product
         Optional<Product> productOptional = productRepository.findById(request.getProductId());
